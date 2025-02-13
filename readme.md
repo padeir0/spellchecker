@@ -4,9 +4,22 @@
 
 <summary>Contents</summary>
 
-- [Pré-requisitos](#prerequisitos)
-- [Comandos básicos do terminal](#comandosbasicos)
-- [As Etapas](#etapas)
+ - [Pré-requisitos](#prerequisitos)
+ - [Comandos básicos do terminal](#comandosbasicos)
+ - [As Etapas](#etapas)
+   - [Hello World](#hello)
+   - [Requisitos: Básico de C](#req1)
+   - [Reconhecendo as palavras](#recwords)
+   - [Requisitos: Essencial de C](#req2)
+   - [I Am Groot](#groot)
+   - [Requisitos: Arquivos](#req3)
+   - [5 mil palavras](#cincomil)
+   - [Senhor dos Anéis](#lotr)
+   - [Busca Binária](#binary)
+   - [Expandindo o dicionário](#expand)
+   - [Sugestões](#sugest)
+   - [Easter Eggs](#easter)
+ - [Leitura adicional](#more)
 
 </details>
 
@@ -154,7 +167,7 @@ e na maioria dos casos eu recorro a ele.
 
 O projeto vai ficar cada vez mais complexo,
 e vai ser realizado em etapas.
-Cada etapa tem uma recompensa descrita no título.
+Cada etapa tem uma recompensa.
 
 Vou sempre listar os capítulos do livro K&R e uns tutoriais
 para você seguir antes de usar numa tarefa.
@@ -174,7 +187,7 @@ Entretanto, saber _como_ quebrar o problema requer experiência,
 então pode ser que você trave um pouco no começo, mas não se abale:
 é normal.
 
-### Hello World (R$1)
+### Hello World <a name="hello"></a>
 
 Agora o objetivo é ter certeza que o ambiente
 está pronto pra gente programar.
@@ -256,7 +269,7 @@ Agora podemos executar `./run hello.c`
 e o programa vai ser compilado, executado e o binário
 vai ser deletado.
 
-### Requisitos antes de continuar (R$20)
+### Requisitos: Básico de C <a name="req1"></a>
 
 Você vai precisar aprender C, siga
 [esse tutorial](https://www.learn-c.org/) e
@@ -272,7 +285,7 @@ Se você não tiver entendido funções ainda,
 e [funções](https://www.geeksforgeeks.org/c-functions/).
 Veja se algum desses tutoriais te agrada.
 
-### Reconhecendo as palavras (R$10)
+### Reconhecendo as palavras <a name="recwords"></a>
 
 Antes de verificar a ortografia das palavras,
 é necessário achar as palavras.
@@ -326,7 +339,7 @@ Dicas:
  `void lower_word(char* word)` que toma a sua palavra
  no argumento `word`, transformando cada caractere usando `lower_char`.
 
-### Requisitos antes de continuar (R$25)
+### Requisitos: Essencial de C <a name="req2"></a>
 
 Para a próxima etapa, você vai precisar usar alocação dinâmica.
 Portanto, faça as seções 
@@ -349,7 +362,7 @@ Dica:
  genérica `void remove_special(char* dest, char* s)`
  que copia _apenas as letras_ da string `s` e passa pra string `dest`.
 
-### I Am Groot (R$5)
+### I Am Groot <a name="groot"></a>
 
 Seu dicionário são apenas as palavras "i", "am" e "groot".
 Tem um diálogo do filme dos Guardiões no arquivo `iamgroot.txt`.
@@ -375,7 +388,7 @@ char* dict[NUM_WORDS] = {
  com as palavras do dicionário, essa não é a forma mais rápida,
  mas vamos otimizar em outras etapas.
 
-### Requisitos antes de continuar (R$10)
+### Requisitos: Arquivos <a name="req3"></a>"
 
 Você vai ter que usar a função `fopen` da biblioteca `stdio.h`,
 pode ler o arquivo todo em memória e depois processar as palavras,
@@ -386,7 +399,7 @@ Aprender a lidar com arquivos é necessário,
 siga [esse tutorial](https://www.geeksforgeeks.org/basics-file-handling-c/)
 e dê uma passada de olho no capítulo 7 do livro do K&R.
 
-### 5 mil palavras (R$10)
+### 5 mil palavras <a name="cincomil"></a>
 
 Agora iremos crescer o dicionário, mas colocar
 ele como uma array global não vai ser legal.
@@ -403,7 +416,7 @@ Dica:
  - Você já sabe que temos 5000 palavras, então pode usar uma array
  global `char* dict[5000];` para colocar elas.
 
-### Senhor dos Anéis (R$15)
+### Senhor dos Anéis <a name="lotr"></a>
 
 As coisas começam a ficar mais complicadas.
 O dicionário é o mesmo, mas você vai ter que checar
@@ -434,7 +447,7 @@ nas palavras que começam com essa mesma letra.
  para ver onde uma região começa, dado o caractere `c`,
  você faz `letter_start[c - 'a']`.
 
-### Busca Binária (R$25)
+### Busca Binária <a name="binary"></a>
 
 A idéia que apresentei na seção anterior pode ser aplicada multiplas
 vezes: se eu tenho uma palavra "alive", eu não preciso necessariamente
@@ -483,7 +496,7 @@ typedef struct {
 ```
  - Pegue a região retornada pela busca binária e faça uma busca linear.
 
-### Expandindo o dicionário (R$10)
+### Expandindo o dicionário <a name="expand"></a>
 
 Muitos dos nomes de pessoas e lugares no livro do senhor dos anéis
 vão ser reportados como erros gramaticais. Melhore seu programa
@@ -495,7 +508,7 @@ Dica:
  - Você pode colocar o output do seu programa em novo arquivo
  usando o operador `>`, isto é: `./run seuprograma.c > palavras`
 
-### Sugestões (R$20)
+### Sugestões <a name="sugest"></a>
 
 Basicamente, tu vai pegar um dos dicionários menores,
 como o de 5 mil palavras e, se uma palavra estiver errada,
@@ -530,7 +543,7 @@ Dica:
  da palavra. Indexe ela com o caractere, da mesma forma que fizemos
  anteriormente: `letters[c-'a']`.
 
-### Desafio (R$10)
+### Easter Eggs <a name="easter"></a>
 
 Tem 5 números escritos por extenso em português no livro
 do senhor dos anéis. Modifique seu programa para
@@ -539,7 +552,7 @@ me envie.
 
 Dica: todos os números tem 2 digitos.
 
-## Leitura adicional:
+## Leitura adicional <a name="more"></a>
 
  - [Como que o `spell` do UNIX cabia em 64KB de memória](https://blog.codingconfessions.com/p/how-unix-spell-ran-in-64kb-ram).
  - [Livro alternativo ao K&R](https://beej.us/guide/bgc/).
