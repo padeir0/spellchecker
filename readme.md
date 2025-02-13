@@ -327,7 +327,7 @@ Dicas:
  - Caracteres são números e as letras são representadas por números
  adjacentes. Verifique a [tabela ascii](https://www.ime.usp.br/~kellyrb/mac2166_2015/tabela_ascii.html).
  Você pode verificar se um caractere `c`
- é uma letra minuscula usando a expressão `c >= 'a' && c <= z`.
+ é uma letra minuscula usando a expressão `c >= 'a' && c <= 'z'`.
  - Para cada caractere que `is_word_char` retornar verdadeiro,
  você pode preencher uma array global `char word[256];` até
  que algum caractere retorne falso. Assim que isso acontecer,
@@ -381,12 +381,12 @@ char* dict[NUM_WORDS] = {
 ```
  - Para verificar se uma palavra está no dicionário,
  você pode criar uma função `bool spellcheck(char* word)`
- que verifica se a palavra está no dicionário `dict`.
- Tenha certeza de que a palavra está formatada em minusculo
- e sem caracteres especiais.
- - A função `spellcheck` pode comparar a palavra uma a uma
- com as palavras do dicionário, essa não é a forma mais rápida,
- mas vamos otimizar em outras etapas.
+ que verifica se a palavra está no dicionário `dict`
+ usando uma _busca linear_. Nesse caso, sua busca linear
+ vai ser simplesmente comparar a palavra `word` em sequência
+ com cada uma das palavras do dicionário.
+ - Tenha certeza de que a palavra está formatada em minusculo
+ e sem caracteres especiais antes de fazer a busca.
 
 ### Requisitos: Arquivos <a name="req3"></a>"
 
@@ -504,9 +504,9 @@ e adicione esses nomes no seu dicionário.
 
 Dica:
  - Você pode usar o comando `sort` para reordenar o dicionário
- depois de adicionar os nomes
+ depois de adicionar os nomes.
  - Você pode colocar o output do seu programa em novo arquivo
- usando o operador `>`, isto é: `./run seuprograma.c > palavras`
+ usando o operador `>`, isto é: `./run seuprograma.c > palavras`.
 
 ### Sugestões <a name="sugest"></a>
 
