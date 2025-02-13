@@ -1,5 +1,15 @@
 # Spell checker
 
+<details>
+
+<summary>Contents</summary>
+
+- [Pré-requisitos](#prerequisitos)
+- [Comandos básicos do terminal](#comandosbasicos)
+- [As Etapas](#etapas)
+
+</details>
+
 Você vai aprender a fazer um _spell checker_.
 Um programa que vai receber como entrada
 um texto, e vai emitir todas as palavras
@@ -17,7 +27,7 @@ ao `spell` do UNIX.
 Se eu te conheço,
 você vai gostar de assistir [esse video](https://www.youtube.com/watch?v=tc4ROCJYbm0)
 sobre o sistema UNIX.
-Nele, você vai ver os autores do livro de C que eu te emprestei,
+Nele, você vai ver os autores do livro de C (K&R) que eu te emprestei,
 o [Dennis Ritchie](https://en.wikipedia.org/wiki/Dennis_Ritchie)
 e o [Brian Kerningham](https://en.wikipedia.org/wiki/Brian_Kernighan).
 Também vai ver a lenda do [Ken Thompson](https://en.wikipedia.org/wiki/Ken_Thompson).
@@ -36,7 +46,7 @@ ele virou pro agente de segurança e falou
 "meu filho, a única forma de eu usar isso como uma arma
 é se eu jogar essa porra na cabeça de alguém".
 
-## Pré-requisitos
+## Pré-requisitos <a name="prerequisitos"></a>
 
 A linguagem de programação C foi
 criada _especificamente_ para implementar o UNIX,
@@ -60,7 +70,7 @@ O WSL demora um pouco mais pra instalar mas não vai ter problema nenhum
 com lag. Instalar Linux direto já é um comprometimento, é melhor começar
 pelo WSL e migrar quando estiver segura.
 
-## Comandos básicos do terminal
+## Comandos básicos do terminal <a name="comandosbasicos"></a>
 
 O terminal é simples, mas demora até você pegar a manha.
 Eu vou passar alguns comandos aqui pra você se acostumar.
@@ -140,17 +150,14 @@ comece o prompt com "Estou usando Linux, em um terminal Bash.
 Como faço para fazer ...". O GPT é mestre na linha de comando,
 e na maioria dos casos eu recorro a ele.
 
-## As etapas
+## As etapas <a name="etapas"></a>
 
 O projeto vai ficar cada vez mais complexo,
 e vai ser realizado em etapas.
-Após a conclusão de cada etapa, você vai me
-mostrar o código e rodar ele, com isso, vai
-ganhar o dinheiro referente àquela etapa.
+Cada etapa tem uma recompensa descrita no título.
 
-Vou sempre listar os capítulos do livro
-que te emprestei, o K&R, pra você
-ler antes de resolver uma tarefa.
+Vou sempre listar os capítulos do livro K&R e uns tutoriais
+para você seguir antes de usar numa tarefa.
 Se tiver dificuldade com qualquer coisa, pode me perguntar,
 as vezes eu consigo ajudar.
 
@@ -168,8 +175,6 @@ então pode ser que você trave um pouco no começo, mas não se abale:
 é normal.
 
 ### Hello World (R$1)
-
-**Essa etapa não tem requisitos.**
 
 Agora o objetivo é ter certeza que o ambiente
 está pronto pra gente programar.
@@ -259,7 +264,7 @@ faça todos os exercícios da seção "Learn the basics".
 
 Depois disso, passe o olho na introdução e no
 primeiro capítulo ("A tutorial introduction")
-do livro que te emprestei (Kerningham & Ritchie).
+do K&R.
 
 Se você não tiver entendido funções ainda,
 [funções](https://www.w3schools.com/c/c_functions.php),
@@ -269,40 +274,228 @@ Veja se algum desses tutoriais te agrada.
 
 ### Reconhecendo as palavras (R$10)
 
-Printar as palavras do stdin, uma por linha, só isso.
-**Definir melhor o que é uma "palavra"**
+Antes de verificar a ortografia das palavras,
+é necessário achar as palavras.
+Nessa etapa você vai ler o texto como input
+e vai imprimir as palavras, uma por linha.
+
+Podemos definir uma palavra como uma
+sequência de letras (minusculas ou maiusculas)
+misturadas com apostrofes `'` e hifens `-`
+e separadas por espaço.
+
+Seu programa vai ter que converter as letras
+pra minúsculas antes de imprimir.
+
+Por exemplo:
+```
+ - That's not what I said!
+```
+Vai ser separado em:
+`That's`, `not`, `what`, `I`, `said`.
+E seu programa deve imprimir:
+
+```
+that's
+not
+what
+i
+said
+```
+
+Dicas:
+ - O livro do K&R tem um programa para contar
+ palavras no primeiro capitulo, você pode começar entendendo como
+ ele funciona (seção 1.5.4).
+ - Você pode escrever uma função `bool is_word_char(char c)`
+ que verifica se um caractere pode ser parte de uma palavra,
+ isto é: se ele é uma letra (maiuscula ou minuscula), um apostrofe
+ ou um hifen.
+ - Caracteres são números e as letras são representadas por números
+ adjacentes. Verifique a [tabela ascii](https://www.ime.usp.br/~kellyrb/mac2166_2015/tabela_ascii.html).
+ Você pode verificar se um caractere `c`
+ é uma letra minuscula usando a expressão `c >= 'a' && c <= z`.
+ - Para cada caractere que `is_word_char` retornar verdadeiro,
+ você pode preencher uma array global `char word[256];` até
+ que algum caractere retorne falso. Assim que isso acontecer,
+ esse buffer vai conter sua palavra. Não se esqueça de resetar o
+ buffer sempre que terminar de imprimir uma palavra.
+ - Para colocar a palavra como minuscula, você pode escrever duas funções:
+ `char lower_char(char c)` que pega um único caractere e converte para
+ minuscula e
+ `void lower_word(char* word)` que toma a sua palavra
+ no argumento `word`, transformando cada caractere usando `lower_char`.
+
+### Requisitos antes de continuar (R$25)
+
+Para a próxima etapa, você vai precisar usar alocação dinâmica.
+Portanto, faça as seções 
+"Pointers", 
+"Structures", 
+"Function arguments by reference",
+"Dynamic allocation" e
+"Arrays and Pointers" do [primeiro tutorial](https://www.learn-c.org/).
+Dê uma passada de olho no capítulo 4 e 5, e na seção 6.3 e 6.4
+do livro K&R.
+
+Como vamos usar dicionários em inglês,
+vamos ter que lidar com `'` em palavras
+como "can't".
+Modifique seu programa para formatar as palavras
+e remover os caracteres especiais.
+ 
+Dica:
+ - Para remover os caracteres especiais, você pode criar uma função
+ genérica `void remove_special(char* dest, char* s)`
+ que copia _apenas as letras_ da string `s` e passa pra string `dest`.
 
 ### I Am Groot (R$5)
 
-Construir em cima do anterior, 
-fazer verificação usando um dicionário,
-mas o dicionário é só uma array com "I", "Am" e "Groot".
+Seu dicionário são apenas as palavras "i", "am" e "groot".
+Tem um diálogo do filme dos Guardiões no arquivo `iamgroot.txt`.
+Seu programa vai ler esse diálogo e imprimir todas as palavras
+que não estão no seu dicionário.
+
+Dicas:
+ - Você pode representar seu dicionário como uma array global
+```c
+#define NUM_WORDS 3
+char* dict[NUM_WORDS] = {
+  "i",
+  "am",
+  "groot",
+}
+```
+ - Para verificar se uma palavra está no dicionário,
+ você pode criar uma função `bool spellcheck(char* word)`
+ que verifica se a palavra está no dicionário `dict`.
+ Tenha certeza de que a palavra está formatada em minusculo
+ e sem caracteres especiais.
+ - A função `spellcheck` pode comparar a palavra uma a uma
+ com as palavras do dicionário, essa não é a forma mais rápida,
+ mas vamos otimizar em outras etapas.
+
+### Requisitos antes de continuar (R$10)
+
+Você vai ter que usar a função `fopen` da biblioteca `stdio.h`,
+pode ler o arquivo todo em memória e depois processar as palavras,
+nós temos memória para dar e vender. Você provavelmente vai ter que
+usar alocação de memória dinâmica com o `malloc`.
+
+Aprender a lidar com arquivos é necessário,
+siga [esse tutorial](https://www.geeksforgeeks.org/basics-file-handling-c/)
+e dê uma passada de olho no capítulo 7 do livro do K&R.
 
 ### 5 mil palavras (R$10)
 
-Abra o dicionário de 5 mil palavras incluso no repositório,
-jogue na memória e verifique as palavras do mesmo jeito que
-você fez com _I Am Groot_.
+Agora iremos crescer o dicionário, mas colocar
+ele como uma array global não vai ser legal.
+Ao invés disso, você vai ter que abrir o arquivo
+`words_5k.txt` dentro do seu programa e usar
+essas palavras para criar seu dicionário.
 
-### 10 mil palavras (R$30)
+Deve verificar o mesmo arquivo `iamgroot.txt`
+e imprimir as palavras que não estão no dicionário.
 
-As coisas começam a ficar mais complicadas,
-O dicionário é grande e você vai ter que checar
-capítulos inteiros de Senhor dos Anéis.
-Você vai ter que ordernar o dicionário e fazer uma busca binária.
+Dica:
+ - O arquivo `words_5k.txt` tem uma palavra por linha, e essas palavras
+ já estão formatadas em minusculo e sem caracteres especiais.
+ - Você já sabe que temos 5000 palavras, então pode usar uma array
+ global `char* dict[5000];` para colocar elas.
 
-### 370 mil palavras (R$50)
+### Senhor dos Anéis (R$15)
 
-Fudeu! É coisa pra caralho. Você vai ter que esquecer a precisão
-aqui. Uma função de hash vai ser usada pra criar um conjunto,
-existe uma possibilidade de erro, mas vamos admitir ser muito
-pequena.
+As coisas começam a ficar mais complicadas.
+O dicionário é o mesmo, mas você vai ter que checar
+todo os 6 livros do senhor dos anéis, totalizando 528 mil
+palavras.
+O livro
+do senhor dos anéis se encontra em `LOTR.txt`. Eu preenchi
+minuciosamente o texto com vários erros de ortografia.
 
-Vou lhe fornecer a função de hash, chamada MurmurHash.
-Você vai preprocessar o dicionário e salvar apenas as hashs.
-Boa sorte.
+Dicas:
+ - Para conseguir terminar isso, você vai ter que otimizar seu código.
+Observe o seguinte: o dicionário está ordenado, isso significa
+que todas as palavras que começam com "a" precedem as palavras
+que começam com "b", e assim vai até chegar em "z". Existem
+apenas 342 palavras começando com "a", apenas 238 palavras
+começando com "b", etc. Quando você ler uma palavra do
+input, você pode checar a primeira letra dela, e ao invés
+de procurar no dicionário todo, você procura apenas
+nas palavras que começam com essa mesma letra.
+ - Para separar o dicionário em multiplas partes, você
+ pode ter duas arrays de indices: `int letter_start[26]` e
+ `int letter_end[26]`.
+ Para cada letra, você marca o começo e fim da seção do dicionário
+ nessas arrays. Desse jeito, você pode verificar somente
+ as palavras entre o começo e fim de cada região.
+ - Se `c` é uma letra entre `'a'` e `'z'`, você pode converter
+ ela para um ìndice da array usando `c - 'a'`, ou seja,
+ para ver onde uma região começa, dado o caractere `c`,
+ você faz `letter_start[c - 'a']`.
 
-### Sugestões (R$50)
+### Busca Binária (R$25)
+
+A idéia que apresentei na seção anterior pode ser aplicada multiplas
+vezes: se eu tenho uma palavra "alive", eu não preciso necessariamente
+checar ela contra _todas_ as 342 palavras que começam com "a", afinal,
+a segunda letra dessa palavra é "l" e existem apenas 29
+palavras que começam com "al".
+Além do mais, existem apenas 2 palavras que começam com "ali" e
+apenas 1 palavra que começa com "aliv".
+
+Apesar disso, separar as palavras em letras é um pouco complicado.
+Ao invés disso, vamos separar em classes: A letra 'n' e
+letras antes de 'n'; e letras depois de 'n'.
+
+No dicionário de 5 mil palavras, existem 2926 palavras
+que começam com letras antes de 'n', e existem
+apenas 1755 palavras que começam com duas letras
+antes de 'n' em sequência.
+
+Podemos aplicar essa idéia multiplas vezes até sobrar uma
+pequena quantidade de palavras para verificar
+(talvez 10 seja um bom número).
+Quando isso acontecer,
+verificamos as palavras uma a uma.
+
+O nome desse algoritmo é _busca binária_ em contraste, o algoritmo
+que usavamos anteriormente se chama _busca linear_.
+Você pode estudar [esse tutorial](https://www.geeksforgeeks.org/binary-search-a-string/),
+[ver esse video](https://www.youtube.com/watch?v=P3YID7liBug) e
+dar uma olhada nas seções 3.3 e 6.3 do livro do K&R.
+
+Na pasta tem outros dois dicionários, um de 10 mil palavras (`words_10k.txt`)
+e um de 370 mil palavras (`words_370k.txt`). Troque o dicionário,
+meça a diferença de tempo que o programa leva para ler senhor dos anéis.
+(você pode usar o comando `time` pra medir o tempo de execução
+de um programa, basta executar `time ./run seuprograma.c`).
+
+Dica:
+ - Faça a sua busca binária retornar apenas os indices do
+ começo e fim de uma região. Você pode retornar uma estrutura
+ como a seguinte:
+```c
+typedef struct {
+ int begin;
+ int end;
+} Region;
+```
+ - Pegue a região retornada pela busca binária e faça uma busca linear.
+
+### Expandindo o dicionário (R$10)
+
+Muitos dos nomes de pessoas e lugares no livro do senhor dos anéis
+vão ser reportados como erros gramaticais. Melhore seu programa
+e adicione esses nomes no seu dicionário.
+
+Dica:
+ - Você pode usar o comando `sort` para reordenar o dicionário
+ depois de adicionar os nomes
+ - Você pode colocar o output do seu programa em novo arquivo
+ usando o operador `>`, isto é: `./run seuprograma.c > palavras`
+
+### Sugestões (R$20)
 
 Basicamente, tu vai pegar um dos dicionários menores,
 como o de 5 mil palavras e, se uma palavra estiver errada,
@@ -311,11 +504,46 @@ Existem várias maneiras de fazer isso, um jeito simples
 é contar o número de letras em cada palavra e tentar
 achar outras palavras com número similar de letras.
 
-Para melhorar o algoritmo, você pode percorrer as palavras em ordem,
-se mais que 70% das letras estiverem no lugar certo, você emite
-uma sugestão.
+Essa estratégia nos permite verificar a ocorrência
+de erros de tipografia como "teh" ao invés de "the",
+ie, _erros de transposição_.
 
-Se esse teste falhar, procure a maior substring em comum das duas
-palavras, se for menos que 3 caracteres, não emita nenhuma sugestão.
+Para isso, vamos usar a região da busca binária:
+se a busca linear na região falhar, olhe as palavras
+dessa região uma por uma e vê quais são similares.
 
-<!--https://blog.codingconfessions.com/p/how-unix-spell-ran-in-64kb-ram-->
+Vamos definir duas palavras similares da seguinte forma:
+duas palavras são similares se:
+ - Começam com as mesmas letras (isso a busca binária já garante pra gente)
+ - Tem a mesma distribuição de letras.
+
+Imprima a sugestão na mesma linha que a palavra,
+usando um `:\t` para separar elas.
+
+Dica:
+ - Faça uma função `bool is_similar(char* word, char* word)`
+ que conta a quantidade de letras de cada palavra e retorna
+ verdadeiro se for igual.
+ - Para contar a quantidade de letras, crie uma função
+ `void count_letters(char letters[26], char* word)`.
+ Use a array `char letters[26]` para contar o número de letras
+ da palavra. Indexe ela com o caractere, da mesma forma que fizemos
+ anteriormente: `letters[c-'a']`.
+
+### Desafio (R$10)
+
+Tem 5 números escritos por extenso em português no livro
+do senhor dos anéis. Modifique seu programa para
+te ajudar a achar esses números. Quando achar todos os 5,
+me envie.
+
+Dica: todos os números tem 2 digitos.
+
+## Leitura adicional:
+
+ - [Como que o `spell` do UNIX cabia em 64KB de memória](https://blog.codingconfessions.com/p/how-unix-spell-ran-in-64kb-ram).
+ - [Livro alternativo ao K&R](https://beej.us/guide/bgc/).
+ - [Levenshtein Distance](https://en.wikipedia.org/wiki/Levenshtein_distance).
+ Eu nunca consegui implementar esse algoritmo direito, mas se quiser se aventurar:
+ [tutorial](https://www.geeksforgeeks.org/edit-distance-dp-5/),
+ [tutorial](https://www.youtube.com/watch?v=MiqoA-yF-0M).

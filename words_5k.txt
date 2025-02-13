@@ -2182,7 +2182,7 @@ slander
 partisan
 trap
 aquatic
-fresh-water
+freshwater
 hood
 disdain
 removed
