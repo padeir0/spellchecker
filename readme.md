@@ -205,7 +205,7 @@ Coloca isso aqui num arquivo chamado `hello.c`:
 ```c
 #include <stdio.h>
 
-int main()
+int main(void)
 {
     printf("Hello, World!\n");
 }
@@ -336,8 +336,9 @@ Dicas:
  - Para colocar a palavra como minuscula, você pode escrever duas funções:
  `char lower_char(char c)` que pega um único caractere e converte para
  minuscula e
- `void lower_word(char* word)` que toma a sua palavra
- no argumento `word`, transformando cada caractere usando `lower_char`.
+ `void lower_word(char* word, int length)` que toma a sua palavra
+ no argumento `word` e o comprimento da palavra em `length`,
+ transformando cada caractere usando `lower_char`.
 
 ### Requisitos: Essencial de C <a name="req2"></a>
 
@@ -359,7 +360,7 @@ e remover os caracteres especiais.
  
 Dica:
  - Para remover os caracteres especiais, você pode criar uma função
- genérica `void remove_special(char* dest, char* s)`
+ genérica `int remove_special(char* dest, char* s, int length)`
  que copia _apenas as letras_ da string `s` e passa pra string `dest`.
 
 ### I Am Groot <a name="groot"></a>
@@ -377,14 +378,16 @@ char* dict[NUM_WORDS] = {
   "i",
   "am",
   "groot",
-}
+};
 ```
  - Para verificar se uma palavra está no dicionário,
- você pode criar uma função `bool spellcheck(char* word)`
+ você pode criar uma função `bool spellcheck(char* word, int length)`
  que verifica se a palavra está no dicionário `dict`
  usando uma _busca linear_. Nesse caso, sua busca linear
  vai ser simplesmente comparar a palavra `word` em sequência
  com cada uma das palavras do dicionário.
+ - Você pode usar a função `strncmp` para verificar se duas strings
+ são iguais.
  - Tenha certeza de que a palavra está formatada em minusculo
  e sem caracteres especiais antes de fazer a busca.
 
