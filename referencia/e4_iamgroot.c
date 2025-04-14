@@ -60,9 +60,9 @@ Atenção especial em:
     return true;
   }
 Se `dict_word_length != length` então as palavras são diferentes.
-Se os comprimentos são diferentes a segunda parte da condição,
-ie, `strncmp(dict_word, word, length) == 0`
-nem mesmo executa. Por outro lado, se `dict_word_length == length`,
+Se os comprimentos são diferentes, a segunda parte da condição,
+ie, `strncmp(dict_word, word, length) == 0`, nem mesmo executa.
+Por outro lado, se `dict_word_length == length`,
 então as palavras tem o mesmo tamanho e podemos utilizar tanto `length`
 ou `dict_word_length` na chamada de função.
 */

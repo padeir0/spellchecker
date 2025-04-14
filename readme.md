@@ -461,7 +461,7 @@ Além do mais, existem apenas 2 palavras que começam com "ali" e
 apenas 1 palavra que começa com "aliv".
 
 Apesar disso, separar as palavras em letras é um pouco complicado.
-Ao invés disso, vamos separar em classes: A letra 'n' e
+Ao invés disso, vamos separar em classes:
 letras antes de 'n'; e letras depois de 'n'.
 
 No dicionário de 5 mil palavras, existem 2926 palavras
