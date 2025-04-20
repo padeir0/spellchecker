@@ -1,8 +1,11 @@
-/* Aqui finalmente implementamos a função `spellcheck`
-*/
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+
+/* Nós incluimos o dicionário aqui ao invés de puxar os valores de um arquivo,
+   desse jeito, não precisamos nos preocupar com toda burocracia de abrir arquivos.
+*/
+#include "dict_10k.h"
 
 bool is_word_char(char c) {
   return (c >= 'a' && c <= 'z') ||
@@ -43,29 +46,6 @@ int remove_special(char* dest, char* s, int length) {
   return written;
 }
 
-#define NUM_WORDS 3
-char* dict[NUM_WORDS] = {
-  "i",
-  "am",
-  "groot",
-};
-
-/* Essa função simplesmente verifica se `word`
-está em `dict`. Fazemos isso com uma busca linear, ie,
-verificamos palavra por palavra do dicionário, tentando
-verificar se as palavras são iguais.
-Atenção especial em:
-  if (dict_word_length == length &&
-      strncmp(dict_word, word, length) == 0) {
-    return true;
-  }
-Se `dict_word_length != length` então as palavras são diferentes.
-Se os comprimentos são diferentes, a segunda parte da condição,
-ie, `strncmp(dict_word, word, length) == 0`, nem mesmo executa.
-Por outro lado, se `dict_word_length == length`,
-então as palavras tem o mesmo tamanho e podemos utilizar tanto `length`
-ou `dict_word_length` na chamada de função.
-*/
 bool spellcheck(char* word, int length) {
   int i = 0;
   while (i < NUM_WORDS) {
@@ -83,15 +63,9 @@ bool spellcheck(char* word, int length) {
 void fmt_print(char* word, int length) {
   lower_word(word, length);
   int new_len = remove_special(word, word, length);
-  /* Por questão de estilo, fazemos um _early return_ quando a
-    palavra tem tamanho nulo. Essa técnica é muito útil para refatorar
-    o código.
-  */ 
   if (new_len == 0) {
     return;
   }
-  /* Se a palavra não existe no dicionário, printamos ela na tela.
-  */
   if (spellcheck(word, length) == false) {
     printf("%.*s\n", new_len, word);
   }
@@ -102,7 +76,7 @@ int main(void) {
   int input = getchar();
   int word_index = 0;
   while (input != EOF) {
-    char c = (char) input;
+    char c = (char)input;
     if (is_word_char(c)) {
       word[word_index] = c;
       word_index++;

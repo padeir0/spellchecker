@@ -1,0 +1,2 @@
+#!/bin/bash
+cat ../LOTR.txt | run $1 > $1_output

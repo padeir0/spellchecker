@@ -12,10 +12,10 @@
    - [Reconhecendo as palavras](#recwords)
    - [Requisitos: Essencial de C](#req2)
    - [I Am Groot](#groot)
-   - [Requisitos: Arquivos](#req3)
-   - [5 mil palavras](#cincomil)
+   - [10 mil palavras](#dezmil)
    - [Senhor dos Anéis](#lotr)
    - [Busca Binária](#binary)
+   - [Requisitos: Arquivos](#req3)
    - [Expandindo o dicionário](#expand)
    - [Sugestões](#sugest)
    - [Easter Eggs](#easter)
@@ -391,33 +391,33 @@ char* dict[NUM_WORDS] = {
  - Tenha certeza de que a palavra está formatada em minusculo
  e sem caracteres especiais antes de fazer a busca.
 
-### Requisitos: Arquivos <a name="req3"></a>"
+### 10 mil palavras <a name="dezmil"></a>
 
-Você vai ter que usar a função `fopen` da biblioteca `stdio.h`,
-pode ler o arquivo todo em memória e depois processar as palavras,
-nós temos memória para dar e vender. Você provavelmente vai ter que
-usar alocação de memória dinâmica com o `malloc`.
-
-Aprender a lidar com arquivos é necessário,
-siga [esse tutorial](https://www.geeksforgeeks.org/basics-file-handling-c/)
-e dê uma passada de olho no capítulo 7 do livro do K&R.
-
-### 5 mil palavras <a name="cincomil"></a>
-
-Agora iremos crescer o dicionário, mas colocar
-ele como uma array global não vai ser legal.
-Ao invés disso, você vai ter que abrir o arquivo
-`words_5k.txt` dentro do seu programa e usar
-essas palavras para criar seu dicionário.
+Existe um arquivo na pasta `./referencias` chamado `dict_10k.h`,
+ele contém um dicionário com 10 mil palavras, você pode incluir
+ele diretamente e usar as variaveis globais `dict` e `NUM_WORDS`
+nos mesmo lugar que a etapa anterior.
 
 Deve verificar o mesmo arquivo `iamgroot.txt`
 e imprimir as palavras que não estão no dicionário.
+Rode também no arquivo `LOTR.txt`, na minha máquina, esse programa
+demora 40 segundos para ler todo o arquivo.
 
-Dica:
- - O arquivo `words_5k.txt` tem uma palavra por linha, e essas palavras
- já estão formatadas em minusculo e sem caracteres especiais.
- - Você já sabe que temos 5000 palavras, então pode usar uma array
- global `char* dict[5000];` para colocar elas.
+Dica: veja o arquivo `referencia/test`, se ele
+tiver permissão de executar (`chmod +x test`), use ele assim:`./test e6_lotr.c`.
+
+Esse script vai jogar todo o arquivo `LOTR.txt` no `STDIN`,
+para que seja possível ler o arquivo usando apenas a função `getchar`.
+O símbolo `>` no final do comando fala pro Bash jogar qualquer coisa que seu programa
+printar pro `STDOUT` em um arquivo chamado `output`. Se estiver curiosa,
+tente executar `echo "beep" > meep` no seu terminal.
+
+Podemos verificar o tempo de execução
+usando o comando `time`:
+```bash
+time ./test e6_lotr.c
+```
+Use essa idéia para testar seu programa nas próximas etapas.
 
 ### Senhor dos Anéis <a name="lotr"></a>
 
@@ -434,70 +434,69 @@ Dicas:
 Observe o seguinte: o dicionário está ordenado, isso significa
 que todas as palavras que começam com "a" precedem as palavras
 que começam com "b", e assim vai até chegar em "z". Existem
-apenas 342 palavras começando com "a", apenas 238 palavras
+apenas 720 palavras começando com "a", apenas 536 palavras
 começando com "b", etc. Quando você ler uma palavra do
 input, você pode checar a primeira letra dela, e ao invés
 de procurar no dicionário todo, você procura apenas
 nas palavras que começam com essa mesma letra.
  - Para separar o dicionário em multiplas partes, você
- pode ter duas arrays de indices: `int letter_start[26]` e
- `int letter_end[26]`.
+ pode ter duas arrays de indices: `int letter_start[256]` e
+ `int letter_end[256]`.
  Para cada letra, você marca o começo e fim da seção do dicionário
  nessas arrays. Desse jeito, você pode verificar somente
  as palavras entre o começo e fim de cada região.
- - Se `c` é uma letra entre `'a'` e `'z'`, você pode converter
- ela para um ìndice da array usando `c - 'a'`, ou seja,
- para ver onde uma região começa, dado o caractere `c`,
- você faz `letter_start[c - 'a']`.
+ - Você pode indexar essas arrays com um caractere `c`
+ diretamente usando `letter_start[(int)c]`, esse `(int)` é
+ só uma conversão de tipo. Nós só vamos popular 26 dessas
+ 256 entradas da array, mas não se preocupe, isso usa no máximo
+ 1KB de memória, não precisamos otimizar o uso desses bytes.
+ - Teste o output da etapa `e5` com a `e6`, os dois devem
+ printar as mesmas palavras. Você consegue fazer isso executando
+ tanto o script `test` e rodando `diff e5_ten_thousand.c_output e6_lotr.c_output`.
+ Adeqüe essa idéia para seu programa.
+
+OBS: usando essas otimizações, o programa, que antes demorava 40 segundos para
+terminar, agora demora 2 segundos, mas podemos fazer melhor.
 
 ### Busca Binária <a name="binary"></a>
 
-A idéia que apresentei na seção anterior pode ser aplicada multiplas
-vezes: se eu tenho uma palavra "alive", eu não preciso necessariamente
-checar ela contra _todas_ as 342 palavras que começam com "a", afinal,
-a segunda letra dessa palavra é "l" e existem apenas 29
-palavras que começam com "al".
-Além do mais, existem apenas 2 palavras que começam com "ali" e
-apenas 1 palavra que começa com "aliv".
+Separar as palavras em letras é um pouco complicado, podemos fazer melhor.
+Vamos usar da informação que nosso dicionário está ordenado alfabeticamente
+para fazer uma *busca binária*.
 
-Apesar disso, separar as palavras em letras é um pouco complicado.
-Ao invés disso, vamos separar em classes:
-letras antes de 'n'; e letras depois de 'n'.
+Busca binária é um algoritmo recursivo. Para verificar se uma palavra `word` está no nosso dicionário,
+nós pegamos nosso dicionário e achamos a palavra no meio, chame de `middle_word`,
+nesse caso, com o dicionário de 10000 palavras, é a de índice 4999.
+Se por acaso nossa palavra for menor, isto é, `strncmp(word, middle_word) < 0`,
+então repetimos esse processo na metade inferior do dicionário, isto é:
+pegamos o índice do meio entre 0 e 4999, nesse caso 2498, e verificamos o
+resultado de `strncmp` novamente.
 
-No dicionário de 5 mil palavras, existem 2926 palavras
-que começam com letras antes de 'n', e existem
-apenas 1755 palavras que começam com duas letras
-antes de 'n' em sequência.
+Lembre que `strncmp(a, b)` retorna `0` se `a == b`,
+retorna `< 0` se `a < b` e retorna `> 0` se `a > b`.
+Não deixe de ver o algoritmo no arquivo `e7_binsearch.c`,
+é complicado entender esse algoritmo de primeira.
+Veja esse [video](https://www.youtube.com/watch?v=eVuPCG5eIr4)
+antes de se enfiar no código.
 
-Podemos aplicar essa idéia multiplas vezes até sobrar uma
-pequena quantidade de palavras para verificar
-(talvez 10 seja um bom número).
-Quando isso acontecer,
-verificamos as palavras uma a uma.
+Com essa otimização, o programa sai de 2 segundos pra 0.7 segundos
+na minha máquina.
 
-O nome desse algoritmo é _busca binária_ em contraste, o algoritmo
-que usavamos anteriormente se chama _busca linear_.
-Você pode estudar [esse tutorial](https://www.geeksforgeeks.org/binary-search-a-string/),
-[ver esse video](https://www.youtube.com/watch?v=P3YID7liBug) e
-dar uma olhada nas seções 3.3 e 6.3 do livro do K&R.
+### Requisitos: Arquivos <a name="req3"></a>
 
-Na pasta tem outros dois dicionários, um de 10 mil palavras (`words_10k.txt`)
-e um de 370 mil palavras (`words_370k.txt`). Troque o dicionário,
+Você vai ter que usar a função `fopen` da biblioteca `stdio.h`,
+pode ler o arquivo todo em memória e depois processar as palavras,
+nós temos memória para dar e vender. Você provavelmente vai ter que
+usar alocação de memória dinâmica com o `malloc`.
+
+Aprender a lidar com arquivos é necessário,
+siga [esse tutorial](https://www.geeksforgeeks.org/basics-file-handling-c/)
+e dê uma passada de olho no capítulo 7 do livro do K&R.
+
+### Dicionário de 370 mil palavras <a name="centenasdemilhares"></a>
+
+Na pasta tem outro de 370 mil palavras (`words_370k.txt`). Troque o dicionário,
 meça a diferença de tempo que o programa leva para ler senhor dos anéis.
-(você pode usar o comando `time` pra medir o tempo de execução
-de um programa, basta executar `time ./run seuprograma.c`).
-
-Dica:
- - Faça a sua busca binária retornar apenas os indices do
- começo e fim de uma região. Você pode retornar uma estrutura
- como a seguinte:
-```c
-typedef struct {
- int begin;
- int end;
-} Region;
-```
- - Pegue a região retornada pela busca binária e faça uma busca linear.
 
 ### Expandindo o dicionário <a name="expand"></a>
 
@@ -513,8 +512,8 @@ Dica:
 
 ### Sugestões <a name="sugest"></a>
 
-Basicamente, tu vai pegar um dos dicionários menores,
-como o de 5 mil palavras e, se uma palavra estiver errada,
+Basicamente, tu vai pegar um dicionários menor,
+como o de 10 mil palavras e, se uma palavra estiver errada,
 você vai tentar dar uma sugestão de correção.
 Existem várias maneiras de fazer isso, um jeito simples
 é contar o número de letras em cada palavra e tentar
